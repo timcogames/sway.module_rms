@@ -1,1 +1,1 @@
-# sway.module_resource
+# sway.module_rms
