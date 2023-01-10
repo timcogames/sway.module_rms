@@ -51,6 +51,7 @@ set(MODULE_GAPI_GL_DIR ${CMAKE_CURRENT_LIST_DIR})
 # Добавляем пути для поиска хедеров
 include_directories("${SYSTEM_X11_INCLUDE_DIRS}")
 include_directories("${MODULE_RMS_DIR}/lib/include")
+include_directories("${MODULE_RMS_DIR}/submodules/sway.module_loader/include")
 include_directories("${MODULE_RMS_DIR}/submodules/sway.module_core/lib/include")
 include_directories("${MODULE_RMS_DIR}/submodules/sway.module_math/lib/include")
 
