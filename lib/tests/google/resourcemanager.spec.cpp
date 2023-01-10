@@ -15,6 +15,7 @@ TEST(ResourceManagerTest, Loaded) {
   if (myfile.is_open()) {
     auto imageDescriptor = provider->getPlug()->loadFromStream(myfile);
 
-    std::cout << "img width: " << imageDescriptor.width << "\theight: " << imageDescriptor.height << std::endl;
+    std::cout << "img width: " << imageDescriptor.size.getW() << "\theight: " << imageDescriptor.size.getH()
+              << std::endl;
   }
 }
