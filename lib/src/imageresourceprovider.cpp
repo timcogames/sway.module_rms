@@ -1,14 +1,13 @@
-#include <sway/rms/resourceprovider.hpp>
+#include <sway/rms/imageresourceprovider.hpp>
 
 #include <iostream>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(rms)
 
-ResourceProvider::ResourceProvider() {
+ImageResourceProvider::ImageResourceProvider(const std::string &plugname) {
   try {
-    plug_ = new core::Plugin(core::generic::io::Path(
-        "/Users/apriori85/Documents/Projects/sway.module_rms/bin/module_loader_png.dylib.0.1.0"));
+    plug_ = new core::Plugin(core::generic::io::Path(plugname));
     auto callbackFunc = plug_->getMethod<PluginGetDescriptorFunc_t>("pluginGetLoader");
     instance_ = callbackFunc.call();
   } catch (const std::exception &err) {
@@ -16,7 +15,7 @@ ResourceProvider::ResourceProvider() {
   }
 }
 
-ResourceProvider::~ResourceProvider() { SAFE_DELETE_OBJECT(plug_); };
+ImageResourceProvider::~ImageResourceProvider() { SAFE_DELETE_OBJECT(plug_); };
 
 NAMESPACE_END(rms)
 NAMESPACE_END(sway)
