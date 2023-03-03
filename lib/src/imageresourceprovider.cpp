@@ -7,7 +7,7 @@ NAMESPACE_BEGIN(rms)
 
 ImageResourceProvider::ImageResourceProvider(const std::string &plugname) {
   try {
-    plug_ = new core::Plugin(core::generic::io::Path(plugname));
+    plug_ = new core::Plugin(core::generic::io::Path(plugname), RTLD_LAZY | RTLD_GLOBAL);
     auto callbackFunc = plug_->getMethod<PluginGetDescriptorFunc_t>("pluginGetLoader");
     instance_ = callbackFunc.call();
   } catch (const std::exception &err) {
