@@ -13,25 +13,47 @@ set(META_RMS_VERSION_PATCH 0)
 set(META_RMS_VERSION ${META_RMS_VERSION_MAJOR}.${META_RMS_VERSION_MINOR}.${META_RMS_VERSION_PATCH})
 
 # Опции сборки
-option(MODULE_RMS_BUILD_SHARED "Build shared library" OFF)
+option(MODULE_RMS_SHARED_LIB "Build shared library" OFF)
 option(MODULE_RMS_ENABLE_COVERAGE "Enable coverage builds" OFF)
 option(MODULE_RMS_ENABLE_TESTS "Enable test builds" OFF)
+option(GLOBAL_EMSCRIPTEN_PLATFORM "Using emscripten compiler" OFF)
+option(GLOBAL_EMSCRIPTEN_USE_BINDING "Using emscripten binding" OFF)
+option(CUSTOM_EMSCRIPTEN_ROOT_DIR "Emscripten root directory" OFF)
+
+if (NOT DEFINED CMAKE_TOOLCHAIN_FILE AND GLOBAL_EMSCRIPTEN_PLATFORM)
+  set(CMAKE_TOOLCHAIN_FILE "${CUSTOM_EMSCRIPTEN_ROOT_DIR}/cmake/Modules/Platform/Emscripten.cmake")
+  include(${CMAKE_TOOLCHAIN_FILE})
+endif ()
 
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build" FORCE)
 endif ()
 
-project(${META_RMS_PRJNAME} CXX)
+project(${META_RMS_PRJNAME} VERSION ${META_RMS_VERSION} LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if(MODULE_RMS_ENABLE_COVERAGE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g ")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
-endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
+
+if (GLOBAL_EMSCRIPTEN_PLATFORM)
+  set(CMAKE_CXX_COMPILER "${CUSTOM_EMSCRIPTEN_ROOT_DIR}/em++")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -sWASM=1 -sMODULARIZE=1")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --bind -Os -std=c++17")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unknown-pragmas -Wno-unicode-whitespace \
+      -Wno-unused-local-typedef -Wno-invalid-noreturn -Wno-unused-command-line-argument")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEMSCRIPTEN_PLATFORM")
+  if (GLOBAL_EMSCRIPTEN_USE_BINDING)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEMSCRIPTEN_PLATFORM_USE_BINDING")
+  endif ()
+endif ()
+
+# if(MODULE_RMS_ENABLE_COVERAGE)
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g ")
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs")
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage")
+#   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+# endif()
 
 # Определяем каталог вывода по умолчанию
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -61,8 +83,8 @@ link_directories("${SYSTEM_X11_LIBRARY_DIRS}")
 file(GLOB_RECURSE MODULE_RMS_HEADERS "${MODULE_RMS_DIR}/lib/include/*.*")
 file(GLOB_RECURSE MODULE_RMS_SOURCES "${MODULE_RMS_DIR}/lib/src/*.*")
 
-if (MODULE_RMS_BUILD_SHARED)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=default -fPIE")
+if (MODULE_RMS_SHARED_LIB)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIE -fvisibility=hidden")
 
   # Добавляем в проект цель для сборки динамической библиотеки
   add_library(${META_RMS_LIBNAME} SHARED ${MODULE_RMS_SOURCES})
