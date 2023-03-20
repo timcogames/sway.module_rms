@@ -1,6 +1,8 @@
 # project output files
 /build
-/bin
+/bin/**/*
+!/bin/module_loader_png.dylib.*
+!/bin/img.png
 
 # osx noise
 .DS_Store
