@@ -23,7 +23,7 @@ public:
 
   void loadImage(const std::string &name, const std::string &filename);
 
-  std::shared_ptr<ImageResource> getImageResourceByName(const std::string &name) {
+  auto getImageResourceByName(const std::string &name) -> std::shared_ptr<ImageResource> {
     return ResourceManager<ImageResource>::findLoadedResource(name);
   }
 
