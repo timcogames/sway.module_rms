@@ -8,11 +8,11 @@
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(rms)
 
-class ResourceManagerSystem;
+class ImageResourceManager;
 
 class ImageResource : public Resource {
 public:
-  ImageResource(ResourceManagerSystem *system);
+  ImageResource(ImageResourceManager *mngr);
 
   virtual ~ImageResource() = default;
 
@@ -21,7 +21,7 @@ public:
   auto getDescriptor() -> loader::ImageDescriptor { return descriptor_; }
 
 private:
-  ResourceManagerSystem *system_;
+  ImageResourceManager *mngr_;
   loader::ImageDescriptor descriptor_;
 };
 

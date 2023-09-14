@@ -16,9 +16,9 @@ public:
 
   ~ImageResourceProvider();
 
-  [[nodiscard]] core::PluginInfo getInfo() const { return plug_->getInfo(); }
+  [[nodiscard]] auto getInfo() const -> core::PluginInfo { return plug_->getInfo(); }
 
-  [[nodiscard]] loader::ImageLoaderPlugin *getPlug() const { return instance_.plug(); }
+  [[nodiscard]] auto getPlug() const -> loader::ImageLoaderPlugin * { return instance_.plug(); }
 
 private:
   core::Plugin *plug_;

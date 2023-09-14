@@ -1,5 +1,5 @@
-#ifndef SWAY_RMS_RESOURCEMANAGERSYSTEM_HPP
-#define SWAY_RMS_RESOURCEMANAGERSYSTEM_HPP
+#ifndef SWAY_RMS_IMAGERESOURCEMANAGER_HPP
+#define SWAY_RMS_IMAGERESOURCEMANAGER_HPP
 
 #include <sway/core.hpp>
 #include <sway/rms/imageresourceprovider.hpp>
@@ -11,11 +11,11 @@
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(rms)
 
-class ResourceManagerSystem : public ResourceManager<ImageResource> {
+class ImageResourceManager : public ResourceManager<ImageResource> {
 public:
-  ResourceManagerSystem() = default;
+  ImageResourceManager() = default;
 
-  ~ResourceManagerSystem() = default;
+  ~ImageResourceManager() = default;
 
   void registerImageProvider(const std::string &plugname);
 
@@ -34,4 +34,4 @@ private:
 NAMESPACE_END(rms)
 NAMESPACE_END(sway)
 
-#endif  // SWAY_RMS_RESOURCEMANAGERSYSTEM_HPP
+#endif  // SWAY_RMS_IMAGERESOURCEMANAGER_HPP
