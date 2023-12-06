@@ -5,9 +5,9 @@
 #### Конфигурируем проект для сборки
 
 ```console
-cmake -DCMAKE_BUILD_TYPE=Release \
-      -DCUSTOM_GTEST_ROOT_DIR=/Users/apriori85/Documents/Third-party/googletest \
-      -DMODULE_RMS_ENABLE_TESTS=ON ../
+cmake -D CMAKE_BUILD_TYPE=Release \
+      -D CUSTOM_GTEST_ROOT_DIR=/Users/<USER_NAME>/Documents/Third-party/googletest \
+      -D MODULE_RMS_ENABLE_TESTS=ON ../
 ```
 
 #### Запускаем сборку
