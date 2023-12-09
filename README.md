@@ -6,7 +6,7 @@
 
 ```console
 cmake -D CMAKE_BUILD_TYPE=Release \
-      -D CUSTOM_GTEST_ROOT_DIR=/Users/<USER_NAME>/Documents/Third-party/googletest \
+      -D GLOB_GTEST_ROOT_DIR=/Users/<USER_NAME>/Documents/Third-party/googletest \
       -D MODULE_RMS_ENABLE_TESTS=ON ../
 ```
 
