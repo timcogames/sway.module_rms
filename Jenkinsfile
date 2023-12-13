@@ -4,7 +4,7 @@ node {
         sh 'git submodule update --init --recursive'
         sh 'mkdir -p build'
         dir('./build') {
-            sh '/opt/homebrew/Cellar/cmake/3.22.1/bin/cmake -DGLOB_GTEST_ROOT_DIR=/Users/apriori85/Documents/Third-party/googletest -DMODULE_RMS_ENABLE_TESTS=ON -DMODULE_RMS_ENABLE_COVERAGE=ON ../'
+            sh '/opt/homebrew/Cellar/cmake/3.27.9/bin/cmake -D GLOB_GTEST_ROOT_DIR=/Users/apriori85/Documents/Third-party/googletest -D MODULE_RMS_ENABLE_TESTS=ON -D MODULE_RMS_ENABLE_COVERAGE=ON ../'
             sh '/opt/homebrew/bin/cmake --build ./'
         }
 
