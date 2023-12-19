@@ -6,8 +6,10 @@
 
 ```console
 cmake -D CMAKE_BUILD_TYPE=Release \
-      -D GLOB_GTEST_ROOT_DIR=/Users/<USER_NAME>/Documents/Third-party/googletest \
-      -D MODULE_RMS_ENABLE_TESTS=ON ../
+      -D GLOB_GTEST_ROOT_DIR=/Users/<USER_NAME>/Documents/Third-party/googletest/googletest \
+      -D GLOB_GTEST_LIB_DIR=/Users/<USER_NAME>/Documents/Third-party/googletest/build/lib \
+      -D MODULE_RMS_ENABLE_TESTS=ON \
+      ../
 ```
 
 #### Запускаем сборку
