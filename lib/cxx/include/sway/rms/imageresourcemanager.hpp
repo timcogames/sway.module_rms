@@ -7,6 +7,7 @@
 
 #include <map>
 #include <memory>
+#include <string>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(rms)

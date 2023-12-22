@@ -3,26 +3,36 @@
 
 #include <sway/core.hpp>
 #include <sway/loader.hpp>
+#include <sway/rms/fetchable.hpp>
+#include <sway/rms/imageresourceprovider.hpp>
 #include <sway/rms/resource.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(rms)
 
+struct ImageResourceData : public FetcherJob {};
+
 class ImageResourceManager;
 
-class ImageResource : public Resource {
+class ImageResource : public Resource, public Fetchable {
 public:
   ImageResource(ImageResourceManager *mngr);
 
   virtual ~ImageResource() = default;
 
+  MTHD_OVERRIDE(void onLoadAsync(void *arg, void *data, int size));
+
+  MTHD_OVERRIDE(void onLoadAsyncFailed(void *arg));
+
   void load(const std::string &filename);
 
   auto getDescriptor() -> loader::ImageDescriptor { return descriptor_; }
 
-private:
+public:
   ImageResourceManager *mngr_;
+  std::shared_ptr<ImageResourceProvider> provider_;
   loader::ImageDescriptor descriptor_;
+  ImageResourceData *resourceData_;
 };
 
 NAMESPACE_END(rms)
