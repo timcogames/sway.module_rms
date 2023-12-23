@@ -62,12 +62,16 @@ private:
   ImageLoaderPluginFake fake_;
 };
 
+auto load(void *, int) -> void * { return nullptr; }
+
+auto fail(void *) -> void * { return nullptr; }
+
 TEST(ResourceManagerTest, Loaded) {
   const auto binPath = std::string("/Users/apriori85/Documents/Projects/sway.module_rms/bin");
   auto mngr = std::make_shared<rms::ImageResourceManager>();
   mngr->registerImageProvider(binPath + "/libmodule_loader_png.dylib");
 
-  mngr->loadImage("png", binPath + "/img.png");
+  mngr->fetchData("png", binPath + "/img.png", (rms::LOAD_CALLBACK)&load, (rms::FAIL_CALLBACK)&fail);
   auto imageResource = mngr->findLoadedResource("png");
 
   EXPECT_EQ(imageResource->getDescriptor().size.getW(), 128);

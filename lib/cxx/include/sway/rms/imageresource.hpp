@@ -24,7 +24,7 @@ public:
 
   MTHD_OVERRIDE(void onLoadAsyncFailed(void *arg));
 
-  void load(const std::string &filename);
+  void load(const std::string &filename, FileAccessDataPack *dataPack);
 
   auto getDescriptor() -> loader::ImageDescriptor { return descriptor_; }
 
@@ -32,7 +32,6 @@ public:
   ImageResourceManager *mngr_;
   std::shared_ptr<ImageResourceProvider> provider_;
   loader::ImageDescriptor descriptor_;
-  ImageResourceData *resourceData_;
 };
 
 NAMESPACE_END(rms)

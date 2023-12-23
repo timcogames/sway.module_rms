@@ -1,6 +1,9 @@
+#include <sway/loader.hpp>
 #include <sway/rms/imageresource.hpp>
 #include <sway/rms/imageresourcemanager.hpp>
 
+#include <functional>  // std::ref
+#include <future>  // std::async
 #include <iostream>
 
 #if EMSCRIPTEN_PLATFORM
@@ -10,11 +13,22 @@
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(rms)
 
+class InputReader {
+public:
+  InputReader(std::ifstream &stream)
+      : stream_(stream) {}
+
+  auto onDataRead(loader::ImageLoaderPlugin *plug) -> loader::ImageDescriptor {
+    auto descriptor = plug->loadFromStream(stream_);
+    return descriptor;
+  }
+
+private:
+  std::ifstream &stream_;
+};
+
 ImageResource::ImageResource(ImageResourceManager *mngr)
-    : mngr_(mngr) {
-  resourceData_ = new ImageResourceData();
-  resourceData_->ctx = (void *)this;
-}
+    : mngr_(mngr) {}
 
 void ImageResource::onLoadAsync(void *arg, void *data, int size) {
   provider_ = mngr_->getImageProvider("png");
@@ -26,26 +40,23 @@ void ImageResource::onLoadAsyncFailed(void *arg) {
   // emscripten_cancel_main_loop();
 }
 
-void ImageResource::load(const std::string &filename) {
+void ImageResource::load(const std::string &filename, FileAccessDataPack *dataPack) {
   provider_ = mngr_->getImageProvider("png");
 
 #if EMSCRIPTEN_PLATFORM
 
-  // clang-format off
-  emscripten_async_wget_data(filename.c_str(), this, [](void *arg, void *buffer, int size) -> void {
-    auto *resourcePtr = (ImageResource *)arg;
-    resourcePtr->descriptor_ = resourcePtr->provider_->getPlug()->loadFrom(buffer, size);
-  }, [](void *arg) -> void {});
-  // clang-format on
+  fetchAsyncData(filename.c_str(), dataPack);
 
 #else
 
   std::ifstream stream(filename);
   if (stream.is_open()) {
-    auto *plug = provider_->getPlug();
-    assert(plug);
+    auto reader = std::make_unique<InputReader>(stream);
+    auto future = std::async(std::launch::async, &InputReader::onDataRead, reader.get(), provider_->getPlug());
 
-    descriptor_ = plug->loadFromStream(stream);
+    if (future.valid()) {
+      descriptor_ = future.get();
+    }
   }
 
 #endif
