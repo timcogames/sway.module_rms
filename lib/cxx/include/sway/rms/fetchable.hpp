@@ -7,6 +7,7 @@
 #  include <emscripten/wget.h>  // emscripten_async_wget_data
 #endif
 
+#include <functional>
 #include <string>
 
 NAMESPACE_BEGIN(sway)
@@ -16,28 +17,28 @@ struct FetcherJob {
   void *ctx;
 };
 
-typedef void (*LOAD_CALLBACK)(void *, int);
-typedef void (*FAIL_CALLBACK)(void *);
-
 struct FileAccessDataPack {
-  LOAD_CALLBACK load;
-  FAIL_CALLBACK fail;
+  std::function<void(void *, void *, int)> load;
+  std::function<void(void *)> fail;
   void *args;
 };
 
 struct AsyncLoader {
-  // LOAD_CALLBACK load;
-  // FAIL_CALLBACK fail;
-
   static void onDataRead(void *arg, void *data, int nbytes) {
     auto *dataPack = static_cast<FileAccessDataPack *>(arg);
-    dataPack->load(data, nbytes);
+    if (dataPack->load) {
+      dataPack->load(dataPack->args, data, nbytes);
+    }
+
     SAFE_DELETE_OBJECT(dataPack)
   }
 
   static void onReadFail(void *arg) {
     auto *dataPack = static_cast<FileAccessDataPack *>(arg);
-    dataPack->fail(arg);
+    if (dataPack->fail) {
+      dataPack->fail(arg);
+    }
+
     SAFE_DELETE_OBJECT(dataPack)
   }
 };
@@ -48,7 +49,7 @@ public:
 
   DFLT_DTOR_VIRTUAL(Fetchable);
 
-  PURE_VIRTUAL(void onLoadAsync(void *arg, void *data, int size));
+  PURE_VIRTUAL(void onLoadAsync(void *args, void *data, int size));
 
   PURE_VIRTUAL(void onLoadAsyncFailed(void *arg));
 

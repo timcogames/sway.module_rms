@@ -22,7 +22,7 @@ public:
 
   auto getImageProvider(const std::string &name) -> std::shared_ptr<ImageResourceProvider> { return providers_[name]; }
 
-  void fetchData(const std::string &name, const std::string &filename, LOAD_CALLBACK load, FAIL_CALLBACK fail);
+  void fetchData(const std::string &name, const std::string &filename);
 
   auto getImageResourceByName(const std::string &name) -> std::shared_ptr<ImageResource> {
     return ResourceManager<ImageResource>::findLoadedResource(name);

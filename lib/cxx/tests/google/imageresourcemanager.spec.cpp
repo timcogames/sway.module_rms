@@ -71,7 +71,7 @@ TEST(ResourceManagerTest, Loaded) {
   auto mngr = std::make_shared<rms::ImageResourceManager>();
   mngr->registerImageProvider(binPath + "/libmodule_loader_png.dylib");
 
-  mngr->fetchData("png", binPath + "/img.png", (rms::LOAD_CALLBACK)&load, (rms::FAIL_CALLBACK)&fail);
+  mngr->fetchData("png", binPath + "/img.png");
   auto imageResource = mngr->findLoadedResource("png");
 
   EXPECT_EQ(imageResource->getDescriptor().size.getW(), 128);

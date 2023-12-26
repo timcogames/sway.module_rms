@@ -20,11 +20,11 @@ public:
 
   virtual ~ImageResource() = default;
 
-  MTHD_OVERRIDE(void onLoadAsync(void *arg, void *data, int size));
+  MTHD_OVERRIDE(void onLoadAsync(void *args, void *data, int size));
 
   MTHD_OVERRIDE(void onLoadAsyncFailed(void *arg));
 
-  void load(const std::string &filename, FileAccessDataPack *dataPack);
+  void load(const std::string &filename);
 
   auto getDescriptor() -> loader::ImageDescriptor { return descriptor_; }
 

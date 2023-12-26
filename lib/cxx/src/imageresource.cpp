@@ -1,4 +1,5 @@
 #include <sway/loader.hpp>
+#include <sway/rms/fetchable.hpp>
 #include <sway/rms/imageresource.hpp>
 #include <sway/rms/imageresourcemanager.hpp>
 
@@ -30,9 +31,11 @@ private:
 ImageResource::ImageResource(ImageResourceManager *mngr)
     : mngr_(mngr) {}
 
-void ImageResource::onLoadAsync(void *arg, void *data, int size) {
-  provider_ = mngr_->getImageProvider("png");
-  descriptor_ = provider_->getPlug()->loadFrom(data, size);
+void ImageResource::onLoadAsync(void *args, void *data, int size) {
+  auto *plug = static_cast<loader::ImageLoaderPlugin *>(args);
+  descriptor_ = plug->loadFrom(data, size);
+
+  loadingDone_.store(true, std::memory_order_relaxed);
 }
 
 void ImageResource::onLoadAsyncFailed(void *arg) {
@@ -40,11 +43,16 @@ void ImageResource::onLoadAsyncFailed(void *arg) {
   // emscripten_cancel_main_loop();
 }
 
-void ImageResource::load(const std::string &filename, FileAccessDataPack *dataPack) {
+void ImageResource::load(const std::string &filename) {
   provider_ = mngr_->getImageProvider("png");
 
 #if EMSCRIPTEN_PLATFORM
 
+  auto *dataPack = new FileAccessDataPack();
+  dataPack->load =
+      std::bind(&ImageResource::onLoadAsync, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+  dataPack->fail = std::bind(&ImageResource::onLoadAsyncFailed, this, std::placeholders::_1);
+  dataPack->args = provider_->getPlug();
   fetchAsyncData(filename.c_str(), dataPack);
 
 #else

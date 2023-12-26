@@ -22,6 +22,9 @@ public:
 
 private:
   std::atomic<ResourceLoadStatus> status_ = {ResourceLoadStatus::PENDING};
+
+public:
+  std::atomic_bool loadingDone_{false};
 };
 
 NAMESPACE_END(rms)

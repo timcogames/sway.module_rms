@@ -13,16 +13,11 @@ void ImageResourceManager::registerImageProvider(const std::string &plugname) {
   providers_.insert(std::make_pair(info.name, provider));
 }
 
-void ImageResourceManager::fetchData(
-    const std::string &name, const std::string &filename, LOAD_CALLBACK load, FAIL_CALLBACK fail) {
+void ImageResourceManager::fetchData(const std::string &name, const std::string &filename) {
   auto resource = std::make_shared<ImageResource>(this);
   resource->setUid(name);
 
-  auto *dataPack = new FileAccessDataPack();
-  dataPack->load = load;
-  dataPack->fail = fail;
-
-  resource->load(filename, dataPack);
+  resource->load(filename);
 
   ResourceManager<ImageResource>::registerResource(resource->getUid().value(), resource);
 }
