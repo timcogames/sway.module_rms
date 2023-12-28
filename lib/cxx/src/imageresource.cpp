@@ -43,7 +43,7 @@ void ImageResource::onLoadAsyncFailed(void *arg) {
   // emscripten_cancel_main_loop();
 }
 
-void ImageResource::load(const std::string &filename) {
+void ImageResource::fetchAsyncDataFromFile(const std::string &filename) {
   provider_ = mngr_->getImageProvider("png");
 
 #if EMSCRIPTEN_PLATFORM

@@ -34,7 +34,7 @@ void GLSLResource::onLoadAsyncFailed(void *arg) {
   // emscripten_cancel_main_loop();
 }
 
-void GLSLResource::load(const std::string &filename) {
+void GLSLResource::fetchAsyncDataFromFile(const std::string &filename) {
 
 #if EMSCRIPTEN_PLATFORM
 
@@ -46,6 +46,20 @@ void GLSLResource::load(const std::string &filename) {
   fetchAsyncData(filename.c_str(), dataPack);
 
 #else
+
+  std::ifstream stream(filename, std::ios::binary);
+  if (!stream.is_open()) {
+    return;
+  }
+
+  std::string source((std::istreambuf_iterator<s8_t>(stream)), std::istreambuf_iterator<s8_t>());
+  stream.close();
+
+  if (source.length() == 0) {
+    return;
+  }
+
+  content_ = source;
 
 #endif
 }

@@ -24,7 +24,7 @@ public:
 
   MTHD_OVERRIDE(void onLoadAsyncFailed(void *arg));
 
-  void load(const std::string &filename);
+  void fetchAsyncDataFromFile(const std::string &filename);
 
   auto getDescriptor() -> loader::ImageDescriptor { return descriptor_; }
 
