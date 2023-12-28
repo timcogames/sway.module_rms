@@ -1,6 +1,8 @@
 #ifndef SWAY_RMS_HPP
 #define SWAY_RMS_HPP
 
+#include <sway/rms/glslresource.hpp>
+#include <sway/rms/glslresourcemanager.hpp>
 #include <sway/rms/imageresource.hpp>
 #include <sway/rms/imageresourcemanager.hpp>
 #include <sway/rms/imageresourceprovider.hpp>
