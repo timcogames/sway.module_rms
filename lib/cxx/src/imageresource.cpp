@@ -35,18 +35,18 @@ void ImageResource::onLoadAsync(void *args, void *data, int size) {
   auto *plug = static_cast<loader::ImageLoaderPlugin *>(args);
   descriptor_ = plug->loadFrom(data, size);
 
-  loadingDone_.store(true, std::memory_order_relaxed);
+  this->postStatus(ResourceDataStatus::SUCCESS);
+  // cond_.notify_all();
 }
 
-void ImageResource::onLoadAsyncFailed(void *arg) {
-  // emscripten_log(EM_LOG_ERROR, "Failed to load file");
-  // emscripten_cancel_main_loop();
-}
+void ImageResource::onLoadAsyncFailed(void *arg) { this->postStatus(ResourceDataStatus::FAIL); }
 
 void ImageResource::fetchAsyncDataFromFile(const std::string &filename) {
   provider_ = mngr_->getImageProvider("png");
 
 #if EMSCRIPTEN_PLATFORM
+
+  this->postStatus(ResourceDataStatus::IN_PROGRESS);
 
   auto *dataPack = new FileAccessDataPack();
   dataPack->load =
