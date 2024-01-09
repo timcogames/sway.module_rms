@@ -73,7 +73,6 @@ if(MODULE_RMS_ENABLE_COVERAGE)
   enable_coverage()
 endif()
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fPIE")
 
 if(GLOB_EMSCRIPTEN_PLATFORM)
@@ -82,10 +81,10 @@ if(GLOB_EMSCRIPTEN_PLATFORM)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -std=c++17")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unknown-pragmas -Wno-unicode-whitespace \
       -Wno-unused-local-typedef -Wno-invalid-noreturn -Wno-unused-command-line-argument")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEMSCRIPTEN_PLATFORM")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D EMSCRIPTEN_PLATFORM")
   if(GLOB_EMSCRIPTEN_USE_BINDINGS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --bind")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEMSCRIPTEN_PLATFORM_USE_BINDING")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D EMSCRIPTEN_USE_BINDINGS")
   endif()
 endif()
 

@@ -1,6 +1,7 @@
 #ifndef SWAY_RMS_HPP
 #define SWAY_RMS_HPP
 
+#include <sway/rms/fetchable.hpp>
 #include <sway/rms/glslresource.hpp>
 #include <sway/rms/glslresourcemanager.hpp>
 #include <sway/rms/imageresource.hpp>
