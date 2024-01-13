@@ -13,53 +13,22 @@ NAMESPACE_BEGIN(rms)
 
 class FetcherQueue {
 public:
-  void add(std::shared_ptr<Fetcher> fetcher) {
-    mutex_.lock();
+  FetcherQueue();
 
-    queue_.push(fetcher);
+  ~FetcherQueue() = default;
 
-    mutex_.unlock();
-  }
+  void add(std::shared_ptr<Fetcher> fetcher);
 
-  void tryDequeue() {
-    mutex_.lock();
+  void perform();
 
-    if (current_ != nullptr && current_->isFinished()) {
-      current_->runCallback();
-      current_->join();
-      current_ = nullptr;
-    } else if (current_ == nullptr && queue_.size() > 0) {
-      current_ = queue_.front();
-      queue_.pop();
+  auto isActive() -> bool;
 
-      current_->fetch();
-    }
-
-    mutex_.unlock();
-  }
-
-  auto isActive() -> bool {
-    mutex_.lock();
-
-    auto isActive = !queue_.empty() || current_ != nullptr;
-
-    mutex_.unlock();
-
-    return isActive;
-  }
-
-  void terminate() {
-    if (current_ != nullptr) {
-      current_->detach();
-    }
-
-    std::queue<std::shared_ptr<Fetcher>>().swap(queue_);
-  }
+  void terminate();
 
 private:
   std::mutex mutex_;
   std::queue<std::shared_ptr<Fetcher>> queue_;
-  std::shared_ptr<Fetcher> current_ = nullptr;
+  std::shared_ptr<Fetcher> current_;
 };
 
 NAMESPACE_END(rms)

@@ -24,7 +24,7 @@ include("${MODULE_RMS_CMAKE_DIR}/project_metadata.cmake")
 include("${MODULE_RMS_CMAKE_DIR}/add_submodule.cmake")
 include("${MODULE_RMS_CMAKE_DIR}/enable_cxx17.cmake")
 include("${MODULE_RMS_CMAKE_DIR}/enable_coverage.cmake")
-include("${MODULE_RMS_CMAKE_DIR}/modules/create_object.cmake")
+include("${MODULE_RMS_CMAKE_DIR}/modules/create_object_library.cmake")
 include("${MODULE_RMS_CMAKE_DIR}/modules/create_interface.cmake")
 include("${MODULE_RMS_CMAKE_DIR}/modules/logger.cmake")
 include("${MODULE_RMS_CMAKE_DIR}/modules/compiler/clang/create_library.cmake")
@@ -40,7 +40,9 @@ include("${MODULE_RMS_CMAKE_DIR}/modules/compiler/emscripten/set_modularize.cmak
 # Опции сборки
 #---------------------------------------------------------------------------------
 
-option(MODULE_RMS_SHARED_LIB "Build shared library" OFF)
+set_glob_options()
+
+option(MODULE_RMS_LIB_TYPE "Build type library" OFF)
 option(MODULE_RMS_ENABLE_COVERAGE "Enable coverage builds" OFF)
 option(MODULE_RMS_ENABLE_TESTS "Enable test builds" OFF)
 
@@ -59,6 +61,14 @@ endif()
 project_metadata("rms" 0.1.0)
 project(${MODULE_RMS_PROJ_NAME} VERSION ${MODULE_RMS_VERSION} LANGUAGES CXX)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fPIE")
+
+#---------------------------------------------------------------------------------
+# Common variables
+#---------------------------------------------------------------------------------
+
+set(MODULE_RMS_DEPENDENCY_LIST "module_rms_dependences")
+
 #---------------------------------------------------------------------------------
 # Submodules
 #---------------------------------------------------------------------------------
@@ -71,21 +81,6 @@ add_submodule("module_core" submodules/sway.module_core)
 
 if(MODULE_RMS_ENABLE_COVERAGE)
   enable_coverage()
-endif()
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fPIE")
-
-if(GLOB_EMSCRIPTEN_PLATFORM)
-  set(CMAKE_CXX_COMPILER "${GLOB_EMSCRIPTEN_ROOT_DIR}/em++")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s WASM=1 -s MODULARIZE=1")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -std=c++17")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unknown-pragmas -Wno-unicode-whitespace \
-      -Wno-unused-local-typedef -Wno-invalid-noreturn -Wno-unused-command-line-argument")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D EMSCRIPTEN_PLATFORM")
-  if(GLOB_EMSCRIPTEN_USE_BINDINGS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --bind")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D EMSCRIPTEN_USE_BINDINGS")
-  endif()
 endif()
 
 #---------------------------------------------------------------------------------
@@ -111,26 +106,14 @@ link_directories("${SYSTEM_X11_LIBRARY_DIRS}")
 file(GLOB_RECURSE MODULE_RMS_HEADERS "${MODULE_RMS_LIST_DIR}/lib/cxx/include/*.*")
 file(GLOB_RECURSE MODULE_RMS_SOURCES "${MODULE_RMS_LIST_DIR}/lib/cxx/src/*.*")
 
-if(MODULE_RMS_SHARED_LIB)
-  # Добавляем в проект цель для сборки динамической библиотеки
-  add_library(${MODULE_RMS_TARGET} SHARED ${MODULE_RMS_SOURCES})
-  set_target_properties(${MODULE_RMS_TARGET} PROPERTIES OUTPUT_NAME ${MODULE_RMS_PROJ_NAME})
-  set_target_properties(${MODULE_RMS_TARGET} PROPERTIES PREFIX "")
-  set_target_properties(${MODULE_RMS_TARGET} PROPERTIES SUFFIX ".so.${MODULE_RMS_VERSION}")
-else()
-  # Добавляем в проект цель для сборки статической библиотеки
-  add_library(${MODULE_RMS_TARGET} STATIC ${MODULE_RMS_SOURCES})
-  set_target_properties(${MODULE_RMS_TARGET} PROPERTIES OUTPUT_NAME ${MODULE_RMS_PROJ_NAME})
-  set_target_properties(${MODULE_RMS_TARGET} PROPERTIES PREFIX "")
-  set_target_properties(${MODULE_RMS_TARGET} PROPERTIES SUFFIX ".a.${MODULE_RMS_VERSION}")
-endif()
+#---------------------------------------------------------------------------------
+# Library
+#---------------------------------------------------------------------------------
 
-target_link_libraries(${MODULE_RMS_TARGET} module_core X11)
-
-enable_cxx17(${MODULE_RMS_TARGET})
+add_subdirectory(lib/cxx)
 
 #---------------------------------------------------------------------------------
-# Построение тестов
+# Tests
 #---------------------------------------------------------------------------------
 
 if(MODULE_RMS_ENABLE_TESTS)

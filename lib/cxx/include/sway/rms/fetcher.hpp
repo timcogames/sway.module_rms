@@ -21,9 +21,9 @@ public:
 
   PURE_VIRTUAL(void fetch());
 
-  void setCallback(std::function<void(nlohmann::json)> callback) { callback_ = callback; }
+  void setCallback(std::function<void(nlohmann::json)> func) { callback_ = func; }
 
-  void runCallback() {
+  void invokeCallback() {
     if (callback_ != nullptr) {
       callback_(response_);
     }

@@ -21,15 +21,27 @@ public:
 
   MTHD_OVERRIDE(void fetch()) {
     thread_ = std::thread([this]() -> void {
+      // if emsc
+
       RemoteFile::fetch(getUrl().c_str(), [this](fetch_res_t fetch) {
         // auto *self = static_cast<FetcherFake *>(fetch->userData);
         response_ = nlohmann::json::parse(std::string(fetch->data, fetch->numBytes));
         if (response_.empty()) {
           // TODO
         }
+
+        fetching_.store(false);
       });
 
-      fetching_.store(false);
+      // else
+
+      //   std::ifstream strm(filename);
+      //   if (!strm.is_open()) {
+      //     std::cout << "failed to open " << filename << std::endl;
+      //     return nullptr;
+      //   }
+
+      //   response_ = nlohmann::json::parse(strm);
     });
   }
 };
