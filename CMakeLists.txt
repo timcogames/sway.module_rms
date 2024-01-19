@@ -73,6 +73,9 @@ set(MODULE_RMS_DEPENDENCY_LIST "module_rms_dependences")
 # Submodules
 #---------------------------------------------------------------------------------
 
+set(MODULE_CORE_LIB_TYPE object CACHE STRING "" FORCE)
+set(MODULE_CORE_ENVIRONMENT ${MODULE_RMS_ENVIRONMENT} CACHE STRING "" FORCE)
+set(MODULE_CORE_COMPILATION ${MODULE_RMS_COMPILATION} CACHE STRING "" FORCE)
 add_submodule("module_core" submodules/sway.module_core)
 
 #---------------------------------------------------------------------------------
