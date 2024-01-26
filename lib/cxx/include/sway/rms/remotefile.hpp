@@ -31,20 +31,22 @@ public:
   static void fetchFail(fetch_res_t fetch) {
     printf("Downloading %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
 
-#if EMSCRIPTEN_PLATFORM
-    emscripten_fetch_close(fetch);
-#endif
+    // #if EMSCRIPTEN_PLATFORM
+    //     emscripten_fetch_close(fetch);
+    // #endif
   }
 
   static void fetchSuccess(fetch_res_t fetch) {
+    printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
+
     auto callbackFn = reinterpret_cast<std::function<void(fetch_res_t)> *>(fetch->userData);
     (*callbackFn)(fetch);
 
-    SAFE_DELETE_OBJECT(callbackFn);
+    // SAFE_DELETE_OBJECT(callbackFn);
 
-#if EMSCRIPTEN_PLATFORM
-    emscripten_fetch_close(fetch);
-#endif
+    // #if EMSCRIPTEN_PLATFORM
+    //     emscripten_fetch_close(fetch);
+    // #endif
   }
 
   static void fetch(lpcstr_t url, std::function<void(fetch_res_t)> onSuccess) {
@@ -55,12 +57,30 @@ public:
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
     strcpy(attr.requestMethod, "GET");
-    attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+    attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY | EMSCRIPTEN_FETCH_SYNCHRONOUS;
+    // attr.attributes = EMSCRIPTEN_FETCH_REPLACE | EMSCRIPTEN_FETCH_LOAD_TO_MEMORY | EMSCRIPTEN_FETCH_WAITABLE;
     attr.onsuccess = fetchSuccess;
     attr.onerror = fetchFail;
+
+    // attr.attributes = EMSCRIPTEN_FETCH_REPLACE | EMSCRIPTEN_FETCH_PERSIST_FILE;
+    // attr.onprogress = [](emscripten_fetch_t *fetch) {
+    //   if (fetch->status != 200) {
+    //     return;
+    //   }
+
+    //   if (fetch->totalBytes > 0) {
+    //     printf("Downloading.. %.2f%% complete.\n", (fetch->dataOffset + fetch->numBytes) * 100.0 /
+    //     fetch->totalBytes);
+    //   } else {
+    //     printf("Downloading.. %lld bytes complete.\n", fetch->dataOffset + fetch->numBytes);
+    //   }
+    // };
+
     attr.userData = userdata;
 
-    emscripten_fetch(&attr, url);
+    emscripten_fetch_t *fetch = emscripten_fetch(&attr, url);
+    emscripten_fetch_wait(fetch, INFINITY);
+    printf("Fetch finished with status %d\n", fetch->status);
 
 #endif
   }

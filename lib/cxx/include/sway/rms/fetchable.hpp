@@ -47,7 +47,7 @@ class Fetchable {
 public:
   Fetchable() = default;
 
-  DFLT_DTOR_VIRTUAL(Fetchable);
+  virtual ~Fetchable() = default;
 
   PURE_VIRTUAL(void onLoadAsync(void *args, void *data, int size));
 

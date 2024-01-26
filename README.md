@@ -2,27 +2,6 @@
 
 [![codecov][codecov-svg]][codecov-url] [![Documentation][codedocs-svg]][codedocs-url] [![License][license-svg]][license-url]
 
-#### Конфигурируем проект для сборки
-
-```console
-cmake -D CMAKE_BUILD_TYPE=Debug \
-      -D GLOB_THIRD_PARTY_DIR=/Users/<USER_NAME>/Documents/Third-party \
-      -D GLOB_GTEST_ROOT_DIR=/Users/<USER_NAME>/Documents/Third-party/googletest/googletest \
-      -D GLOB_GTEST_LIB_DIR=/Users/<USER_NAME>/Documents/Third-party/googletest/build/lib \
-      -D GLOB_GMOCK_ROOT_DIR=/Users/<USER_NAME>/Documents/Third-party/googletest/googlemock \
-      -D GLOB_GMOCK_LIB_DIR=/Users/<USER_NAME>/Documents/Third-party/googletest/build/lib \
-      -D MODULE_CORE_LIB_TYPE=object \
-      -D MODULE_RMS_LIB_TYPE=static \
-      -D MODULE_RMS_ENABLE_TESTS=ON \
-      ../
-```
-
-#### Запускаем сборку
-
-```console
-cmake --build ./
-```
-
 [codecov-svg]: https://codecov.io/gh/timcogames/sway.module_rms/branch/master/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/timcogames/sway.module_rms
 [codedocs-svg]: https://codedocs.xyz/timcogames/sway.module_rms.svg
