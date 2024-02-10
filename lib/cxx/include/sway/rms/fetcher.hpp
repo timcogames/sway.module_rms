@@ -5,12 +5,20 @@
 
 #include <atomic>
 #include <functional>
-#include <nlohmann/json.hpp>
 #include <string>
 #include <thread>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(rms)
+
+struct FetchResponse {
+  lpcstr_t data;
+  u32_t numBytes;
+
+  FetchResponse(lpcstr_t data, u32_t numBytes)
+      : data(data)
+      , numBytes(numBytes) {}
+};
 
 class Fetcher {
 public:
@@ -21,7 +29,7 @@ public:
 
   PURE_VIRTUAL(void fetch());
 
-  void setCallback(std::function<void(nlohmann::json)> func) { callback_ = func; }
+  void setCallback(std::function<void(FetchResponse *)> func) { callback_ = func; }
 
   void invokeCallback() {
     if (callback_ != nullptr) {
@@ -45,8 +53,8 @@ protected:
   std::thread thread_;
   std::atomic_bool fetching_{true};
 
-  std::function<void(nlohmann::json)> callback_ = nullptr;
-  nlohmann::json response_;
+  std::function<void(FetchResponse *)> callback_ = nullptr;
+  FetchResponse *response_;
 
 private:
   std::string url_;
