@@ -31,13 +31,15 @@ public:
 
   void setCallback(std::function<void(FetchResponse *)> func) { callback_ = func; }
 
-  void invokeCallback() {
-    if (callback_ != nullptr) {
-      callback_(response_);
+  void invoke() {
+    if (!callback_) {
+      return;
     }
+
+    callback_(response_);
   }
 
-  auto isFinished() -> bool { return !fetching_.load(); }
+  auto finished() -> bool { return !fetching_.load(); }
 
   void join() { thread_.join(); }
 

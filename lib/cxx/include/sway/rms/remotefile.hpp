@@ -40,6 +40,10 @@ public:
     printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
 
     auto callbackFn = reinterpret_cast<std::function<void(fetch_res_t)> *>(fetch->userData);
+    if (!callbackFn) {
+      return;
+    }
+
     (*callbackFn)(fetch);
 
     // SAFE_DELETE_OBJECT(callbackFn);

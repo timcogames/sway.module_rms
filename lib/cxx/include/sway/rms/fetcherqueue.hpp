@@ -21,7 +21,7 @@ public:
 
   void perform();
 
-  auto isActive() -> bool;
+  auto active() -> bool;
 
   void terminate();
 

@@ -15,8 +15,8 @@ void FetcherQueue::add(std::shared_ptr<Fetcher> fetcher) {
 void FetcherQueue::perform() {
   mutex_.lock();
 
-  if (current_ != nullptr && current_->isFinished()) {
-    current_->invokeCallback();
+  if (current_ != nullptr && current_->finished()) {
+    current_->invoke();
     current_->join();
     current_ = nullptr;
   } else if (current_ == nullptr && queue_.size() > 0) {
@@ -29,12 +29,13 @@ void FetcherQueue::perform() {
   mutex_.unlock();
 }
 
-auto FetcherQueue::isActive() -> bool {
+auto FetcherQueue::active() -> bool {
   mutex_.lock();
-  auto isActive = !queue_.empty() || current_ != nullptr;
+  bool result;
+  result = !queue_.empty() || current_ != nullptr;
   mutex_.unlock();
 
-  return isActive;
+  return result;
 }
 
 void FetcherQueue::terminate() {
