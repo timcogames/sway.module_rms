@@ -37,7 +37,8 @@ public:
   }
 
   static void fetchSuccess(fetch_res_t fetch) {
-    printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
+    printf(
+        "Finished downloading %llu bytes from URL %s.\n", static_cast<unsigned long long>(fetch->numBytes), fetch->url);
 
     auto callbackFn = reinterpret_cast<std::function<void(fetch_res_t)> *>(fetch->userData);
     if (!callbackFn) {
