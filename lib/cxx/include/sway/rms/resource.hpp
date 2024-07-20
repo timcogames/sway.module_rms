@@ -20,7 +20,7 @@ public:
 
   void postStatus(ResourceDataStatus status) {
     // std::lock_guard lock(mutex_);
-    status_.store(core::detail::toUnderlying(status), std::memory_order_seq_cst);
+    status_.store(core::detail::toBase(status), std::memory_order_seq_cst);
   }
 
   [[nodiscard]] auto getStatus() const -> ResourceDataStatus {
@@ -36,7 +36,7 @@ public:
 
 protected:
   std::mutex mutex_;
-  std::atomic_uint status_ = ATOMIC_VAR_INIT(core::detail::toUnderlying(ResourceDataStatus::WAITING));
+  std::atomic_uint status_ = ATOMIC_VAR_INIT(core::detail::toBase(ResourceDataStatus::WAITING));
   std::condition_variable condition_;
 
 public:
