@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 ImageResourceProvider::ImageResourceProvider(const std::string &plugname) {
   try {
@@ -17,5 +17,5 @@ ImageResourceProvider::ImageResourceProvider(const std::string &plugname) {
 
 ImageResourceProvider::~ImageResourceProvider() { SAFE_DELETE_OBJECT(plug_); };
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway

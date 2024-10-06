@@ -6,8 +6,8 @@
 
 #include <string>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 using PluginInstance_t = loader::LoaderPluginDescriptor<loader::ImageLoaderPlugin>;
 using PluginGetDescriptorFunc_t = core::binding::TFunction<PluginInstance_t()>;
@@ -42,7 +42,7 @@ private:
   PluginInstance_t instance_;
 };
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway
 
 #endif  // SWAY_RMS_IMAGERESOURCEPROVIDER_HPP

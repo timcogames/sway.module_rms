@@ -8,8 +8,8 @@
 #include <string>
 #include <thread>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 struct FetchResponse {
   lpcstr_t data;
@@ -62,7 +62,7 @@ private:
   std::string url_;
 };
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway
 
 #endif  // SWAY_RMS_FETCHER_HPP

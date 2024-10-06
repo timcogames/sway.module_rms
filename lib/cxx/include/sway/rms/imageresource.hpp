@@ -7,8 +7,8 @@
 #include <sway/rms/imageresourceprovider.hpp>
 #include <sway/rms/resource.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 struct ImageResourceData : public FetcherJob {};
 
@@ -34,7 +34,7 @@ public:
   loader::ImageDescriptor descriptor_;
 };
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway
 
 #endif  // SWAY_RMS_IMAGERESOURCE_HPP

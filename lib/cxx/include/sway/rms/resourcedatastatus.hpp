@@ -5,8 +5,8 @@
 
 #include <atomic>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 // clang-format off
 enum class ResourceDataStatus : u32_t {
@@ -23,7 +23,7 @@ struct ResourceDataStatusHelper {
   }
 };
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway
 
 #endif  // SWAY_RMS_RESOURCEDATASTATUS_HPP

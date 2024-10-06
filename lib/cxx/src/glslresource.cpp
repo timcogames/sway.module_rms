@@ -10,8 +10,8 @@
 #  include <emscripten/wget.h>  // emscripten_async_wget_data
 #endif
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 auto dataToChar(void *data, int size) -> char * {
   char *tmp = new char[size + 1];
@@ -64,5 +64,5 @@ void GLSLResource::fetchAsyncDataFromFile(const std::string &filename) {
 #endif
 }
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway

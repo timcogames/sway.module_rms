@@ -3,8 +3,8 @@
 
 #include <iostream>  // std::cout
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 void ImageResourceManager::registerImageProvider(const std::string &plugname) {
   auto provider = std::make_shared<ImageResourceProvider>(plugname);
@@ -21,5 +21,5 @@ void ImageResourceManager::fetchData(const std::string &name, const std::string 
   ResourceManager<ImageResource>::registerResource(resource->getUid().value(), resource);
 }
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway

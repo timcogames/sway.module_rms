@@ -9,8 +9,8 @@
 #include <memory>
 #include <string>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 class GLSLResourceManager : public ResourceManager<GLSLResource> {
 public:
@@ -25,7 +25,7 @@ public:
   }
 };
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway
 
 #endif  // SWAY_RMS_GLSLRESOURCEMANAGER_HPP

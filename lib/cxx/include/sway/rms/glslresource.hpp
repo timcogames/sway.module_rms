@@ -6,8 +6,8 @@
 #include <sway/rms/fetchable.hpp>
 #include <sway/rms/resource.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 class GLSLResourceManager;
 
@@ -28,7 +28,7 @@ public:
   std::string content_;
 };
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway
 
 #endif  // SWAY_RMS_GLSLRESOURCE_HPP

@@ -1,7 +1,7 @@
 #include <sway/rms/fetcherqueue.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 FetcherQueue::FetcherQueue()
     : current_(nullptr) {}
@@ -46,5 +46,5 @@ void FetcherQueue::terminate() {
   std::queue<std::shared_ptr<Fetcher>>().swap(queue_);
 }
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway

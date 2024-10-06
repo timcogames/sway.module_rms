@@ -10,8 +10,8 @@
 #include <functional>
 #include <string>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 struct FetcherJob {
   void *ctx;
@@ -62,7 +62,7 @@ public:
   }
 };
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway
 
 #endif  // SWAY_RMS_FETCHABLE_HPP

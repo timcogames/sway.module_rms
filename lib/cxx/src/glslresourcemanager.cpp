@@ -3,8 +3,8 @@
 
 #include <iostream>  // std::cout
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 void GLSLResourceManager::fetchData(const std::string &name, const std::string &filename) {
   auto resource = std::make_shared<GLSLResource>(this);
@@ -14,5 +14,5 @@ void GLSLResourceManager::fetchData(const std::string &name, const std::string &
   ResourceManager<GLSLResource>::registerResource(resource->getUid().value(), resource);
 }
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway

@@ -1,5 +1,7 @@
+#include <sway/core.hpp>
 #include <sway/loader/imagedescriptor.hpp>
 #include <sway/loader/imageloaderplugin.hpp>
+#include <sway/math.hpp>
 #include <sway/rms.hpp>
 
 #include <gmock/gmock.h>
@@ -15,12 +17,11 @@ static void *const NO_NULLPTR = reinterpret_cast<void *>(0x12345678);
 
 class ImageLoaderPluginFake : public loader::ImageLoaderPlugin {
 public:
-  // clang-format off
-  MTHD_OVERRIDE(auto loadFromStream(std::ifstream &source) -> loader::ImageDescriptor) {  // clang-format on
+  MTHD_OVERRIDE(auto loadFromStream(std::ifstream &src) -> loader::ImageDescriptor) {
     loader::ImageDescriptor desc;
     desc.buf.data = nullptr;
     desc.buf.len = 0;
-    desc.size = math::Size<u32_t>();
+    desc.size = math::Size<i32_t>();
     desc.pitch = 0;
     desc.bpp = 0;
     desc.type = 0;
@@ -28,12 +29,11 @@ public:
     return desc;
   }
 
-  // clang-format off
-  MTHD_OVERRIDE(auto loadFrom(void *data, int nbytes) -> loader::ImageDescriptor) {  // clang-format on
+  MTHD_OVERRIDE(auto loadFrom(void *data, int nbytes) -> loader::ImageDescriptor) {
     loader::ImageDescriptor desc;
     desc.buf.data = nullptr;
     desc.buf.len = 0;
-    desc.size = math::Size<u32_t>();
+    desc.size = math::Size<i32_t>();
     desc.pitch = 0;
     desc.bpp = 0;
     desc.type = 0;
@@ -66,7 +66,7 @@ auto load(void *, int) -> void * { return nullptr; }
 
 auto fail(void *) -> void * { return nullptr; }
 
-TEST(ResourceManagerTest, Loaded) {
+TEST(ResourceManagerTest, loaded) {
   const auto binPath = std::string("/Users/apriori85/Documents/Projects/sway.module_rms/bin");
   auto mngr = std::make_shared<rms::ImageResourceManager>();
   mngr->registerImageProvider(binPath + "/libmodule_loader_png.dylib");

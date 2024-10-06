@@ -8,20 +8,20 @@
 #include <memory>
 #include <string>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
-template <class TResource>
-using ResourceMap_t = std::map<std::string, std::shared_ptr<TResource>>;
+template <class RESOURCE>
+using ResourceMap_t = std::map<std::string, std::shared_ptr<RESOURCE>>;
 
-template <class TResource>
+template <class RESOURCE>
 class ResourceManager {
 public:
   ResourceManager() = default;
 
   ~ResourceManager() { resources_.clear(); }
 
-  auto findLoadedResource(const std::string &name) -> std::shared_ptr<TResource> {
+  auto findLoadedResource(const std::string &name) -> std::shared_ptr<RESOURCE> {
     auto iter = resources_.find(name);
     if (iter == resources_.end()) {
       return nullptr;
@@ -30,24 +30,24 @@ public:
     return iter->second;
   }
 
-  void registerResource(const std::string &name, std::shared_ptr<TResource> resource) {
-    resources_.insert(std::make_pair(name, resource));
+  void registerResource(const std::string &name, std::shared_ptr<RESOURCE> res) {
+    resources_.insert(std::make_pair(name, res));
   }
 
-  void unregisterResource(std::shared_ptr<TResource> resource) {
-    const std::string name = resource->getUid().value();
+  void unregisterResource(std::shared_ptr<RESOURCE> res) {
+    const std::string name = res->getUid().value();
 
     auto iter = resources_.find(name);
-    if (iter != resources_.end() && iter->second == resource) {
+    if (iter != resources_.end() && iter->second == res) {
       resources_.erase(iter);
     }
   }
 
 private:
-  ResourceMap_t<TResource> resources_;
+  ResourceMap_t<RESOURCE> resources_;
 };
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway
 
 #endif  // SWAY_RMS_RESOURCEMANAGER_HPP

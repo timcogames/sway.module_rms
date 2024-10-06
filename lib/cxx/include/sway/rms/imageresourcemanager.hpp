@@ -9,8 +9,8 @@
 #include <memory>
 #include <string>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(rms)
+NS_BEGIN_SWAY()
+NS_BEGIN(rms)
 
 class ImageResourceManager : public ResourceManager<ImageResource> {
 public:
@@ -32,7 +32,7 @@ private:
   std::map<std::string, std::shared_ptr<ImageResourceProvider>> providers_;
 };
 
-NAMESPACE_END(rms)
-NAMESPACE_END(sway)
+NS_END()  // namespace rms
+NS_END()  // namespace sway
 
 #endif  // SWAY_RMS_IMAGERESOURCEMANAGER_HPP
