@@ -3,28 +3,25 @@
 
 #include <sway/core.hpp>
 #include <sway/core/foundation/uniqueable.hpp>
+#include <sway/rms/prereqs.hpp>
 #include <sway/rms/resourcedatastatus.hpp>
 
-#include <atomic>
-#include <string>
+namespace sway::rms {
 
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
-
-class Resource : public core::foundation::Uniqueable<std::string> {
+class Resource : public core::Uniqueable<std::string> {
 public:
   Resource()
-      : core::foundation::Uniqueable<std::string>(std::nullopt) {}
+      : core::Uniqueable<std::string>(std::nullopt) {}
 
   virtual ~Resource() = default;
 
   void postStatus(ResourceDataStatus status) {
     // std::lock_guard lock(mutex_);
-    status_.store(core::detail::toBase(status), std::memory_order_seq_cst);
+    status_.store(core::toBase(status), std::memory_order_seq_cst);
   }
 
   [[nodiscard]] auto getStatus() const -> ResourceDataStatus {
-    return core::detail::toEnum<ResourceDataStatus>(status_.load(std::memory_order_seq_cst));
+    return core::toEnum<ResourceDataStatus>(status_.load(std::memory_order_seq_cst));
   }
 
   void wait(std::chrono::milliseconds timeout) {
@@ -36,14 +33,13 @@ public:
 
 protected:
   std::mutex mutex_;
-  std::atomic_uint status_ = ATOMIC_VAR_INIT(core::detail::toBase(ResourceDataStatus::WAITING));
+  std::atomic_uint status_ = ATOMIC_VAR_INIT(core::toBase(ResourceDataStatus::WAITING));
   std::condition_variable condition_;
 
 public:
   std::atomic_bool loadingDone_{false};
 };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms
 
 #endif  // SWAY_RMS_RESOURCE_HPP

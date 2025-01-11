@@ -2,14 +2,9 @@
 #define SWAY_RMS_FETCHER_HPP
 
 #include <sway/core.hpp>
+#include <sway/rms/prereqs.hpp>
 
-#include <atomic>
-#include <functional>
-#include <string>
-#include <thread>
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 struct FetchResponse {
   lpcstr_t data;
@@ -22,12 +17,26 @@ struct FetchResponse {
 
 class Fetcher {
 public:
+#pragma region "Ctors/Dtor"
+  /** \~english @name Constructor & Destructor */ /** \~russian @name Конструктор и Деструктор */
+  /** @{ */
+
   Fetcher(const std::string &url)
       : url_(url) {}
 
   ~Fetcher() = default;
 
-  PURE_VIRTUAL(void fetch());
+  /** @} */
+#pragma endregion
+
+#pragma region "Pure virtual methods"
+  /** \~english @name Pure virtual methods */ /** \~russian @name Чисто виртуальные методы */
+  /** @{ */
+
+  virtual void fetch() = 0;
+
+  /** @} */
+#pragma endregion
 
   void setCallback(std::function<void(FetchResponse *)> func) { callback_ = func; }
 
@@ -62,7 +71,6 @@ private:
   std::string url_;
 };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms
 
 #endif  // SWAY_RMS_FETCHER_HPP

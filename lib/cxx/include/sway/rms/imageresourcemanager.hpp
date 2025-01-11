@@ -3,14 +3,10 @@
 
 #include <sway/core.hpp>
 #include <sway/rms/imageresourceprovider.hpp>
+#include <sway/rms/prereqs.hpp>
 #include <sway/rms/resourcemanager.hpp>
 
-#include <map>
-#include <memory>
-#include <string>
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 class ImageResourceManager : public ResourceManager<ImageResource> {
 public:
@@ -32,7 +28,6 @@ private:
   std::map<std::string, std::shared_ptr<ImageResourceProvider>> providers_;
 };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms
 
 #endif  // SWAY_RMS_IMAGERESOURCEMANAGER_HPP

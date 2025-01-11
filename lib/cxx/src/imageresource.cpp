@@ -3,16 +3,7 @@
 #include <sway/rms/imageresource.hpp>
 #include <sway/rms/imageresourcemanager.hpp>
 
-#include <functional>  // std::ref
-#include <future>  // std::async
-#include <iostream>
-
-#if EMSCRIPTEN_PLATFORM
-#  include <emscripten/wget.h>  // emscripten_async_wget_data
-#endif
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 class InputReader {
 public:
@@ -70,5 +61,4 @@ void ImageResource::fetchAsyncDataFromFile(const std::string &filename) {
 #endif
 }
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms

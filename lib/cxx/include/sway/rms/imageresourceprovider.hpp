@@ -3,14 +3,12 @@
 
 #include <sway/core.hpp>
 #include <sway/loader.hpp>
+#include <sway/rms/prereqs.hpp>
 
-#include <string>
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 using PluginInstance_t = loader::LoaderPluginDescriptor<loader::ImageLoaderPlugin>;
-using PluginGetDescriptorFunc_t = core::binding::TFunction<PluginInstance_t()>;
+using PluginGetDescriptorFunc_t = core::TFunction<PluginInstance_t()>;
 
 class ImageResourceProvider {
 public:
@@ -42,7 +40,6 @@ private:
   PluginInstance_t instance_;
 };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms
 
 #endif  // SWAY_RMS_IMAGERESOURCEPROVIDER_HPP

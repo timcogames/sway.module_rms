@@ -1,10 +1,7 @@
 #include <sway/rms/imageresource.hpp>
 #include <sway/rms/imageresourcemanager.hpp>
 
-#include <iostream>  // std::cout
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 void ImageResourceManager::registerImageProvider(const std::string &plugname) {
   auto provider = std::make_shared<ImageResourceProvider>(plugname);
@@ -15,11 +12,10 @@ void ImageResourceManager::registerImageProvider(const std::string &plugname) {
 
 void ImageResourceManager::fetchData(const std::string &name, const std::string &filename) {
   auto resource = std::make_shared<ImageResource>(this);
-  resource->setUid(name);
+  resource->setUniqueId(name);
   resource->fetchAsyncDataFromFile(filename);
 
-  ResourceManager<ImageResource>::registerResource(resource->getUid().value(), resource);
+  ResourceManager<ImageResource>::registerResource(resource->getUniqueId().value(), resource);
 }
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms

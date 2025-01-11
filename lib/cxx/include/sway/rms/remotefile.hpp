@@ -2,15 +2,9 @@
 #define SWAY_RMS_REMOTEFILE_HPP
 
 #include <sway/core.hpp>
+#include <sway/rms/prereqs.hpp>
 
-#if EMSCRIPTEN_PLATFORM
-#  include <emscripten/fetch.h>
-#endif
-
-#include <functional>
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 #if EMSCRIPTEN_PLATFORM
 using fetch_res_t = emscripten_fetch_t *;
@@ -91,7 +85,6 @@ public:
   }
 };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms
 
 #endif  // SWAY_RMS_REMOTEFILE_HPP

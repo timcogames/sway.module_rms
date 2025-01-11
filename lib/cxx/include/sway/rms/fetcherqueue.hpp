@@ -3,13 +3,9 @@
 
 #include <sway/core.hpp>
 #include <sway/rms/fetcher.hpp>
+#include <sway/rms/prereqs.hpp>
 
-#include <memory>
-#include <mutex>
-#include <queue>
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 class FetcherQueue {
 public:
@@ -31,7 +27,6 @@ private:
   std::shared_ptr<Fetcher> current_;
 };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms
 
 #endif  // SWAY_RMS_FETCHERQUEUE_HPP

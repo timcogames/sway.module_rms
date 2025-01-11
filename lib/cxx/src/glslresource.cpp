@@ -2,16 +2,7 @@
 #include <sway/rms/glslresource.hpp>
 #include <sway/rms/glslresourcemanager.hpp>
 
-#include <functional>  // std::ref
-#include <future>  // std::async
-#include <iostream>
-
-#if EMSCRIPTEN_PLATFORM
-#  include <emscripten/wget.h>  // emscripten_async_wget_data
-#endif
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 auto dataToChar(void *data, int size) -> char * {
   char *tmp = new char[size + 1];
@@ -64,5 +55,4 @@ void GLSLResource::fetchAsyncDataFromFile(const std::string &filename) {
 #endif
 }
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms

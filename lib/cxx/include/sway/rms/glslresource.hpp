@@ -4,10 +4,10 @@
 #include <sway/core.hpp>
 #include <sway/loader.hpp>
 #include <sway/rms/fetchable.hpp>
+#include <sway/rms/prereqs.hpp>
 #include <sway/rms/resource.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 class GLSLResourceManager;
 
@@ -28,7 +28,6 @@ public:
   std::string content_;
 };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms
 
 #endif  // SWAY_RMS_GLSLRESOURCE_HPP

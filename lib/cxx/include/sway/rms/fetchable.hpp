@@ -2,16 +2,9 @@
 #define SWAY_RMS_FETCHABLE_HPP
 
 #include <sway/core.hpp>
+#include <sway/rms/prereqs.hpp>
 
-#if EMSCRIPTEN_PLATFORM
-#  include <emscripten/wget.h>  // emscripten_async_wget_data
-#endif
-
-#include <functional>
-#include <string>
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 struct FetcherJob {
   void *ctx;
@@ -45,13 +38,27 @@ struct AsyncLoader {
 
 class Fetchable {
 public:
+#pragma region "Ctors/Dtor"
+  /** \~english @name Constructor & Destructor */ /** \~russian @name Конструктор и Деструктор */
+  /** @{ */
+
   Fetchable() = default;
 
   virtual ~Fetchable() = default;
 
-  PURE_VIRTUAL(void onLoadAsync(void *args, void *data, int size));
+  /** @} */
+#pragma endregion
 
-  PURE_VIRTUAL(void onLoadAsyncFailed(void *arg));
+#pragma region "Pure virtual methods"
+  /** \~english @name Pure virtual methods */ /** \~russian @name Чисто виртуальные методы */
+  /** @{ */
+
+  virtual void onLoadAsync(void *args, void *data, int size) = 0;
+
+  virtual void onLoadAsyncFailed(void *arg) = 0;
+
+  /** @} */
+#pragma endregion
 
   void fetchAsyncData(const std::string &url, FileAccessDataPack *arg) {
 #if EMSCRIPTEN_PLATFORM
@@ -62,7 +69,6 @@ public:
   }
 };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms
 
 #endif  // SWAY_RMS_FETCHABLE_HPP

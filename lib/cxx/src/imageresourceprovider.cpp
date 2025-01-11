@@ -1,13 +1,10 @@
 #include <sway/rms/imageresourceprovider.hpp>
 
-#include <iostream>
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 ImageResourceProvider::ImageResourceProvider(const std::string &plugname) {
   try {
-    plug_ = new core::Plugin(core::generic::io::Path(plugname), RTLD_NOW);
+    plug_ = new core::Plugin(core::Path(plugname), RTLD_NOW);
     auto callbackFunc = plug_->getMethod<PluginGetDescriptorFunc_t>("pluginGetLoader");
     instance_ = callbackFunc.call();
   } catch (const std::exception &err) {
@@ -17,5 +14,4 @@ ImageResourceProvider::ImageResourceProvider(const std::string &plugname) {
 
 ImageResourceProvider::~ImageResourceProvider() { SAFE_DELETE_OBJECT(plug_); };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms

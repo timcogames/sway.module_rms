@@ -2,11 +2,9 @@
 #define SWAY_RMS_RESOURCEDATASTATUS_HPP
 
 #include <sway/core.hpp>
+#include <sway/rms/prereqs.hpp>
 
-#include <atomic>
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 // clang-format off
 enum class ResourceDataStatus : u32_t {
@@ -23,7 +21,6 @@ struct ResourceDataStatusHelper {
   }
 };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms
 
 #endif  // SWAY_RMS_RESOURCEDATASTATUS_HPP

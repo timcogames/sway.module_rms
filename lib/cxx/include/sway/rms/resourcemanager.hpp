@@ -3,13 +3,9 @@
 
 #include <sway/core.hpp>
 #include <sway/rms/imageresourceprovider.hpp>
+#include <sway/rms/prereqs.hpp>
 
-#include <map>
-#include <memory>
-#include <string>
-
-NS_BEGIN_SWAY()
-NS_BEGIN(rms)
+namespace sway::rms {
 
 template <class RESOURCE>
 using ResourceMap_t = std::map<std::string, std::shared_ptr<RESOURCE>>;
@@ -47,7 +43,6 @@ private:
   ResourceMap_t<RESOURCE> resources_;
 };
 
-NS_END()  // namespace rms
-NS_END()  // namespace sway
+}  // namespace sway::rms
 
 #endif  // SWAY_RMS_RESOURCEMANAGER_HPP
