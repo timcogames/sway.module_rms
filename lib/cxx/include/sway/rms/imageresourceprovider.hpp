@@ -3,7 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/loader.hpp>
-#include <sway/rms/prereqs.hpp>
+#include <sway/rms/_stdafx.hpp>
 
 namespace sway::rms {
 

@@ -3,7 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/core/foundation/uniqueable.hpp>
-#include <sway/rms/prereqs.hpp>
+#include <sway/rms/_stdafx.hpp>
 #include <sway/rms/resourcedatastatus.hpp>
 
 namespace sway::rms {

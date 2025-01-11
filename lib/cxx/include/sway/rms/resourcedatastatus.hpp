@@ -2,7 +2,7 @@
 #define SWAY_RMS_RESOURCEDATASTATUS_HPP
 
 #include <sway/core.hpp>
-#include <sway/rms/prereqs.hpp>
+#include <sway/rms/_stdafx.hpp>
 
 namespace sway::rms {
 

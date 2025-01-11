@@ -2,8 +2,8 @@
 #define SWAY_RMS_FETCHERQUEUE_HPP
 
 #include <sway/core.hpp>
+#include <sway/rms/_stdafx.hpp>
 #include <sway/rms/fetcher.hpp>
-#include <sway/rms/prereqs.hpp>
 
 namespace sway::rms {
 

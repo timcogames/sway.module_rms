@@ -3,9 +3,9 @@
 
 #include <sway/core.hpp>
 #include <sway/loader.hpp>
+#include <sway/rms/_stdafx.hpp>
 #include <sway/rms/fetchable.hpp>
 #include <sway/rms/imageresourceprovider.hpp>
-#include <sway/rms/prereqs.hpp>
 #include <sway/rms/resource.hpp>
 
 namespace sway::rms {

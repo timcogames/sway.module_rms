@@ -2,8 +2,8 @@
 #define SWAY_RMS_GLSLRESOURCEMANAGER_HPP
 
 #include <sway/core.hpp>
+#include <sway/rms/_stdafx.hpp>
 #include <sway/rms/imageresourceprovider.hpp>
-#include <sway/rms/prereqs.hpp>
 #include <sway/rms/resourcemanager.hpp>
 
 namespace sway::rms {
