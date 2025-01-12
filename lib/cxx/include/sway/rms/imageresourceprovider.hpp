@@ -12,9 +12,16 @@ using PluginGetDescriptorFunc_t = core::TFunction<PluginInstance_t()>;
 
 class ImageResourceProvider {
 public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   ImageResourceProvider(const std::string &plugname);
 
   ~ImageResourceProvider();
+
+  /** @} */
+#pragma endregion
 
   [[nodiscard]] auto getInfo() const -> core::PluginInfo { return plug_->getInfo(); }
 

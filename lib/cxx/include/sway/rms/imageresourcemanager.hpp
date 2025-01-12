@@ -10,9 +10,16 @@ namespace sway::rms {
 
 class ImageResourceManager : public ResourceManager<ImageResource> {
 public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   ImageResourceManager() = default;
 
   ~ImageResourceManager() = default;
+
+  /** @} */
+#pragma endregion
 
   void registerImageProvider(const std::string &plugname);
 

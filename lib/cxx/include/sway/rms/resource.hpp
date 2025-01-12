@@ -10,10 +10,17 @@ namespace sway::rms {
 
 class Resource : public core::Uniqueable<std::string> {
 public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   Resource()
       : core::Uniqueable<std::string>(std::nullopt) {}
 
   virtual ~Resource() = default;
+
+  /** @} */
+#pragma endregion
 
   void postStatus(ResourceDataStatus status) {
     // std::lock_guard lock(mutex_);

@@ -13,9 +13,16 @@ class GLSLResourceManager;
 
 class GLSLResource : public Resource, public Fetchable {
 public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   GLSLResource(GLSLResourceManager *mngr);
 
   virtual ~GLSLResource() = default;
+
+  /** @} */
+#pragma endregion
 
   MTHD_OVERRIDE(void onLoadAsync(void *args, void *data, int size));
 

@@ -10,9 +10,16 @@ namespace sway::rms {
 
 class GLSLResourceManager : public ResourceManager<GLSLResource> {
 public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   GLSLResourceManager() = default;
 
   ~GLSLResourceManager() = default;
+
+  /** @} */
+#pragma endregion
 
   void fetchData(const std::string &name, const std::string &filename);
 

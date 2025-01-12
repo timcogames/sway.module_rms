@@ -16,9 +16,16 @@ class ImageResourceManager;
 
 class ImageResource : public Resource, public Fetchable {
 public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   ImageResource(ImageResourceManager *mngr);
 
   virtual ~ImageResource() = default;
+
+  /** @} */
+#pragma endregion
 
   MTHD_OVERRIDE(void onLoadAsync(void *args, void *data, int size));
 

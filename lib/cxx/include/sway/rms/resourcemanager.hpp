@@ -13,9 +13,16 @@ using ResourceMap_t = std::map<std::string, std::shared_ptr<RESOURCE>>;
 template <class RESOURCE>
 class ResourceManager {
 public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   ResourceManager() = default;
 
   ~ResourceManager() { resources_.clear(); }
+
+  /** @} */
+#pragma endregion
 
   auto findLoadedResource(const std::string &name) -> std::shared_ptr<RESOURCE> {
     auto iter = resources_.find(name);

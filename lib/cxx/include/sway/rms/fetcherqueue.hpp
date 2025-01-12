@@ -9,9 +9,16 @@ namespace sway::rms {
 
 class FetcherQueue {
 public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   FetcherQueue();
 
   ~FetcherQueue() = default;
+
+  /** @} */
+#pragma endregion
 
   void add(std::shared_ptr<Fetcher> fetcher);
 
