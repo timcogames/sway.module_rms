@@ -7,12 +7,16 @@
 namespace sway::rms {
 
 struct FetchResponse {
-  lpcstr_t data;
+  std::vector<u8_t> dataVector;
   u32_t numBytes;
 
-  FetchResponse(lpcstr_t data, u32_t numBytes)
-      : data(data)
-      , numBytes(numBytes) {}
+  FetchResponse(std::vector<u8_t> data, u32_t num)
+      : dataVector(std::move(data))
+      , numBytes(num) {}
+
+  FetchResponse(const u8_t *data, u32_t num)
+      : dataVector(data, data + num)
+      , numBytes(num) {}
 };
 
 class Fetcher {
@@ -21,10 +25,10 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  Fetcher(const std::string &url)
-      : url_(url) {}
+  explicit Fetcher(std::string url)
+      : url_(std::move(url)) {}
 
-  ~Fetcher() = default;
+  virtual ~Fetcher() = default;
 
   /** @} */
 #pragma endregion
@@ -38,19 +42,29 @@ public:
   /** @} */
 #pragma endregion
 
-  void setCallback(std::function<void(FetchResponse *)> func) { callback_ = func; }
-
-  void invoke() {
-    if (!callback_) {
-      return;
-    }
-
-    callback_(response_);
+  void setCallback(std::function<void(FetchResponse *)> func) {
+    std::lock_guard<std::mutex> lock(callbackMutex_);
+    callback_ = std::move(func);
   }
 
-  auto finished() -> bool { return !fetching_.load(); }
+  void invoke() {
+    std::function<void(FetchResponse *)> callback;
 
-  void join() { thread_.join(); }
+    {
+      std::lock_guard<std::mutex> lock(callbackMutex_);
+      callback = callback_;
+    }
+
+    if (callback) {
+      callback(response_.get());
+    }
+  }
+
+  void join() {
+    if (thread_.joinable()) {
+      thread_.join();
+    }
+  }
 
   void detach() {
     if (thread_.joinable()) {
@@ -58,16 +72,26 @@ public:
     }
   }
 
-  auto getUrl() -> std::string { return url_; }
+  void cancel() {
+    canceled_.store(true);
+    onCancel();
+  }
+
+  auto finished() -> bool { return !fetching_.load(std::memory_order_acquire); }
+
+  auto getUrl() const -> const std::string & { return url_; }
 
 protected:
+  virtual void onCancel() {}
+
   std::thread thread_;
   std::atomic_bool fetching_{true};
-
-  std::function<void(FetchResponse *)> callback_ = nullptr;
-  FetchResponse *response_;
+  std::atomic_bool canceled_{false};
+  std::unique_ptr<FetchResponse> response_;
+  std::function<void(FetchResponse *)> callback_;
 
 private:
+  std::mutex callbackMutex_;
   std::string url_;
 };
 

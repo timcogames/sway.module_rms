@@ -12,6 +12,6 @@ ImageResourceProvider::ImageResourceProvider(const std::string &plugname) {
   }
 }
 
-ImageResourceProvider::~ImageResourceProvider() { SAFE_DELETE_OBJECT(plug_); };
+ImageResourceProvider::~ImageResourceProvider() { core::safeDelete<core::Plugin>(plug_); };
 
 }  // namespace sway::rms

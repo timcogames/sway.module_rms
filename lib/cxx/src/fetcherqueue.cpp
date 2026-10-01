@@ -6,43 +6,60 @@ FetcherQueue::FetcherQueue()
     : current_(nullptr) {}
 
 void FetcherQueue::add(std::shared_ptr<Fetcher> fetcher) {
-  mutex_.lock();
-  queue_.push(fetcher);
-  mutex_.unlock();
+  std::lock_guard<std::mutex> lock(mutex_);
+
+  if (terminated_) {
+    return;
+  }
+
+  queue_.push(std::move(fetcher));
 }
 
 void FetcherQueue::perform() {
-  mutex_.lock();
+  std::shared_ptr<Fetcher> finished;
+  std::shared_ptr<Fetcher> toStart;
 
-  if (current_ != nullptr && current_->finished()) {
-    current_->invoke();
-    current_->join();
-    current_ = nullptr;
-  } else if (current_ == nullptr && queue_.size() > 0) {
-    current_ = queue_.front();
-    queue_.pop();
-
-    current_->fetch();
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (current_ && current_->finished()) {
+      finished = std::move(current_);
+      current_ = nullptr;
+    } else if (!current_ && !queue_.empty()) {
+      toStart = queue_.front();
+      queue_.pop();
+      current_ = toStart;
+    }
   }
 
-  mutex_.unlock();
+  if (finished) {
+    finished->invoke();
+    finished->join();
+  }
+
+  if (toStart) {
+    toStart->fetch();
+  }
 }
 
 auto FetcherQueue::active() -> bool {
-  mutex_.lock();
-  bool result;
-  result = !queue_.empty() || current_ != nullptr;
-  mutex_.unlock();
-
-  return result;
+  std::lock_guard<std::mutex> lock(mutex_);
+  return !queue_.empty() || current_ != nullptr;
 }
 
 void FetcherQueue::terminate() {
-  if (current_ != nullptr) {
-    current_->detach();
+  std::shared_ptr<Fetcher> fetcher;
+
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    fetcher = std::move(current_);
+    std::queue<std::shared_ptr<Fetcher>>().swap(queue_);
+    terminated_ = true;
   }
 
-  std::queue<std::shared_ptr<Fetcher>>().swap(queue_);
+  if (fetcher) {
+    fetcher->cancel();
+    fetcher->join();
+  }
 }
 
 }  // namespace sway::rms

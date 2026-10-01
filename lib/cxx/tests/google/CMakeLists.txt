@@ -27,7 +27,7 @@ include_directories(${GTEST_INC_DIR} ${GMOCK_INC_DIR})
 # Find project test files
 #--------------------------------------------------------------------------------
 
-file(GLOB MODULE_RMS_SOURCE_TESTS "${PROJECT_SOURCE_DIR}/*.spec.cpp")
+file(GLOB MODULE_RMS_SOURCE_TESTS "${MODULE_RMS_ROOT_DIR}/lib/cxx/tests/*/*.spec.cpp")
 
 #--------------------------------------------------------------------------------
 # Build tests

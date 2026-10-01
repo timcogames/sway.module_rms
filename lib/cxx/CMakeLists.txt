@@ -16,7 +16,7 @@ include_directories("${GLOB_THIRD_PARTY_DIR}/json/include")
 include_directories("${MODULE_RMS_LIST_DIR}/lib/cxx/include")
 include_directories("${MODULE_RMS_LIST_DIR}/submodules/sway.module_loader/api/cxx/include")
 include_directories("${MODULE_RMS_LIST_DIR}/submodules/sway.module_core/lib/cxx/include")
-include_directories("${MODULE_RMS_LIST_DIR}/submodules/sway.module_math/lib/cxx/include")
+include_directories("${MODULE_RMS_LIST_DIR}/submodules/sway.module_math/lib/cpp/inc")
 
 link_directories("${SYSTEM_X11_LIBRARY_DIRS}")
 
@@ -41,19 +41,35 @@ endif()
 #---------------------------------------------------------------------------------
 
 if(NOT TARGET ${MODULE_RMS_DEPENDENCY_LIST})
-  set(TARGET_OBJECT_LIST)
-  set(MODULE_CORE_OBJ_TARGET "module_core_obj")
-
-  if(TARGET ${MODULE_CORE_OBJ_TARGET})
-    list(APPEND TARGET_OBJECT_LIST $<TARGET_OBJECTS:${MODULE_CORE_OBJ_TARGET}>)
-  endif()
-
-  if(TARGET ${MODULE_RMS_OBJ_TARGET})
-    list(APPEND TARGET_OBJECT_LIST $<TARGET_OBJECTS:${MODULE_RMS_OBJ_TARGET}>)
-  endif()
-
-  list(LENGTH TARGET_OBJECT_LIST TARGET_OBJECT_LIST_LENGTH)
-  if(${TARGET_OBJECT_LIST_LENGTH})
-    create_interface(${MODULE_RMS_DEPENDENCY_LIST} ${TARGET_OBJECT_LIST})
-  endif()
+  add_library(${MODULE_RMS_DEPENDENCY_LIST} INTERFACE)
 endif()
+
+set(MODULE_CORE_OBJ_TARGET "module_core_obj")
+
+if(TARGET ${MODULE_CORE_OBJ_TARGET})
+  target_sources(${MODULE_RMS_DEPENDENCY_LIST} INTERFACE
+      $<TARGET_OBJECTS:${MODULE_CORE_OBJ_TARGET}>)
+endif()
+
+if(TARGET ${MODULE_RMS_OBJ_TARGET})
+  target_sources(${MODULE_RMS_DEPENDENCY_LIST} INTERFACE
+      $<TARGET_OBJECTS:${MODULE_RMS_OBJ_TARGET}>)
+endif()
+
+# if(NOT TARGET ${MODULE_RMS_DEPENDENCY_LIST})
+#   set(TARGET_OBJECT_LIST)
+#   set(MODULE_CORE_OBJ_TARGET "module_core_obj")
+
+#   if(TARGET ${MODULE_CORE_OBJ_TARGET})
+#     list(APPEND TARGET_OBJECT_LIST $<TARGET_OBJECTS:${MODULE_CORE_OBJ_TARGET}>)
+#   endif()
+
+#   if(TARGET ${MODULE_RMS_OBJ_TARGET})
+#     list(APPEND TARGET_OBJECT_LIST $<TARGET_OBJECTS:${MODULE_RMS_OBJ_TARGET}>)
+#   endif()
+
+#   list(LENGTH TARGET_OBJECT_LIST TARGET_OBJECT_LIST_LENGTH)
+#   if(${TARGET_OBJECT_LIST_LENGTH})
+#     create_interface(${MODULE_RMS_DEPENDENCY_LIST} ${TARGET_OBJECT_LIST})
+#   endif()
+# endif()

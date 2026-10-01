@@ -6,6 +6,8 @@
 #if EMSCRIPTEN_PLATFORM
 #  include <emscripten/fetch.h>
 #  include <emscripten/wget.h>  // emscripten_async_wget_data
+// #else
+// #  include <curl/curl.h>
 #endif
 
 #include <atomic>
@@ -19,5 +21,6 @@
 #include <queue>
 #include <string>
 #include <thread>
+#include <vector>
 
 #endif  // SWAY_RMS_PREREQS_HPP

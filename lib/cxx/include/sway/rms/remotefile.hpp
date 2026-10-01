@@ -15,71 +15,90 @@ struct FetchRes {
   void *userData;
   lpcstr_t data;
   u32_t numBytes;
+  u32_t totalBytes;
 };
 
 using fetch_res_t = FetchRes *;
 #endif
+
+struct FetchUserData {
+  std::function<void(const u8_t *, u32_t)> callback;
+  std::vector<u8_t> data;
+};
 
 class RemoteFile {
 public:
   static void fetchFail(fetch_res_t fetch) {
     printf("Downloading %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
 
-    // #if EMSCRIPTEN_PLATFORM
-    //     emscripten_fetch_close(fetch);
-    // #endif
+    auto *userData = reinterpret_cast<FetchUserData *>(fetch->userData);
+    if (userData) {
+      if (userData->callback) {
+        userData->callback(nullptr, 0);
+      }
+
+      delete userData;
+    }
+
+#if EMSCRIPTEN_PLATFORM
+    emscripten_fetch_close(fetch);
+#endif
   }
 
   static void fetchSuccess(fetch_res_t fetch) {
     printf(
         "Finished downloading %llu bytes from URL %s.\n", static_cast<unsigned long long>(fetch->numBytes), fetch->url);
 
-    auto callbackFn = reinterpret_cast<std::function<void(fetch_res_t)> *>(fetch->userData);
-    if (!callbackFn) {
-      return;
+    auto *userData = reinterpret_cast<FetchUserData *>(fetch->userData);
+    if (userData) {
+      const auto numBytes = static_cast<u32_t>(fetch->numBytes);
+      userData->data.assign(
+          reinterpret_cast<const u8_t *>(fetch->data), reinterpret_cast<const u8_t *>(fetch->data) + numBytes);
+
+      if (userData->callback) {
+        userData->callback(userData->data.data(), userData->data.size());
+      }
+
+      delete userData;
     }
 
-    (*callbackFn)(fetch);
-
-    // SAFE_DELETE_OBJECT(callbackFn);
-
-    // #if EMSCRIPTEN_PLATFORM
-    //     emscripten_fetch_close(fetch);
-    // #endif
+#if EMSCRIPTEN_PLATFORM
+    emscripten_fetch_close(fetch);
+#endif
   }
 
-  static void fetch(lpcstr_t url, std::function<void(fetch_res_t)> onSuccess) {
-    auto userdata = new std::function(onSuccess);
+  static fetch_res_t fetch(lpcstr_t url, std::function<void(const u8_t *, u32_t)> onResult) {
+    auto userData = std::make_unique<FetchUserData>();
+    userData->callback = std::move(onResult);
 
 #if EMSCRIPTEN_PLATFORM
 
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
-    strcpy(attr.requestMethod, "GET");
-    attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY | EMSCRIPTEN_FETCH_SYNCHRONOUS;
-    // attr.attributes = EMSCRIPTEN_FETCH_REPLACE | EMSCRIPTEN_FETCH_LOAD_TO_MEMORY | EMSCRIPTEN_FETCH_WAITABLE;
+    std::strncpy(attr.requestMethod, "GET", sizeof(attr.requestMethod) - 1);
+    attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY | EMSCRIPTEN_FETCH_REPLACE;
     attr.onsuccess = fetchSuccess;
     attr.onerror = fetchFail;
+    attr.userData = userData.release();  // Владение переходит в колбэк.
+    return emscripten_fetch(&attr, url);
 
-    // attr.attributes = EMSCRIPTEN_FETCH_REPLACE | EMSCRIPTEN_FETCH_PERSIST_FILE;
-    // attr.onprogress = [](emscripten_fetch_t *fetch) {
-    //   if (fetch->status != 200) {
-    //     return;
-    //   }
+#else
 
-    //   if (fetch->totalBytes > 0) {
-    //     printf("Downloading.. %.2f%% complete.\n", (fetch->dataOffset + fetch->numBytes) * 100.0 /
-    //     fetch->totalBytes);
-    //   } else {
-    //     printf("Downloading.. %lld bytes complete.\n", fetch->dataOffset + fetch->numBytes);
-    //   }
-    // };
+    std::ifstream strm(url, std::ios::binary);
+    if (!strm.is_open()) {
+      if (userData->callback) {
+        userData->callback(nullptr, 0);
+      }
 
-    attr.userData = userdata;
+      return nullptr;
+    }
 
-    emscripten_fetch_t *fetch = emscripten_fetch(&attr, url);
-    emscripten_fetch_wait(fetch, INFINITY);
-    printf("Fetch finished with status %d\n", fetch->status);
+    std::vector<u8_t> buf((std::istreambuf_iterator<char>(strm)), std::istreambuf_iterator<char>());
+    if (userData->callback) {
+      userData->callback(buf.data(), static_cast<u32_t>(buf.size()));
+    }
+
+    return nullptr;
 
 #endif
   }

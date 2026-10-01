@@ -23,7 +23,7 @@ struct AsyncLoader {
       dataPack->load(dataPack->args, data, nbytes);
     }
 
-    SAFE_DELETE_OBJECT(dataPack)
+    core::safeDelete<FileAccessDataPack>(dataPack);
   }
 
   static void onReadFail(void *arg) {
@@ -32,7 +32,7 @@ struct AsyncLoader {
       dataPack->fail(arg);
     }
 
-    SAFE_DELETE_OBJECT(dataPack)
+    core::safeDelete<FileAccessDataPack>(dataPack);
   }
 };
 

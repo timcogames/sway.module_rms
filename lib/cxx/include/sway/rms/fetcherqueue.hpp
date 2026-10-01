@@ -32,6 +32,7 @@ private:
   std::mutex mutex_;
   std::queue<std::shared_ptr<Fetcher>> queue_;
   std::shared_ptr<Fetcher> current_;
+  std::atomic_bool terminated_{false};
 };
 
 }  // namespace sway::rms
