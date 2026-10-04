@@ -8,7 +8,7 @@
 namespace sway::rms {
 
 using PluginInstance_t = loader::LoaderPluginDescriptor<loader::ImageLoaderPlugin>;
-using PluginGetDescriptorFunc_t = core::TFunction<PluginInstance_t()>;
+using PluginGetDescriptorFunc_t = core::TFunctionPointer<PluginInstance_t()>;
 
 class ImageResourceProvider {
 public:
