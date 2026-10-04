@@ -102,7 +102,7 @@ include_directories("${GLOB_THIRD_PARTY_DIR}/json/include")
 include_directories("${MODULE_RMS_LIST_DIR}/lib/cxx/include")
 include_directories("${MODULE_RMS_LIST_DIR}/submodules/sway.module_loader/api/cxx/include")
 include_directories("${MODULE_RMS_LIST_DIR}/submodules/sway.module_core/lib/cxx/include")
-include_directories("${MODULE_RMS_LIST_DIR}/submodules/sway.module_math/lib/cpp/inc")
+include_directories("${MODULE_RMS_LIST_DIR}/submodules/sway.module_math/lib/cpp/include")
 
 link_directories("${SYSTEM_X11_LIBRARY_DIRS}")
 
